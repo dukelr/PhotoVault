@@ -21,7 +21,7 @@ private extension String {
     static let empty = ""
 }
 
-class AccountViewController: UIViewController {
+final class AccountViewController: UIViewController {
     
     //MARK: - IBOutlets
     
@@ -186,6 +186,7 @@ class AccountViewController: UIViewController {
     
     private func pushPhotovaultController() {
         guard let controller = storyboard?.instantiateViewController(withIdentifier: PhotovaultViewController.identifier) as? PhotovaultViewController else { return }
+        
         navigationController?.pushViewController(controller, animated: true)
     }
     

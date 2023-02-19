@@ -1,7 +1,7 @@
 
 import Foundation
 
-class Photo: Codable {
+final class Photo: Codable {
     
     var name: String
     var comment: String?

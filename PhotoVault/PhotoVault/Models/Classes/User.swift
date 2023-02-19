@@ -1,7 +1,7 @@
 
 import Foundation
 
-class User: Codable {
+final class User: Codable {
     
     var name: String?
     var password: String?

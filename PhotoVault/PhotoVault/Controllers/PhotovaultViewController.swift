@@ -9,9 +9,10 @@ private enum SegmentIndex: Int {
 
 private extension CGFloat {
     static let inset = 2.0
+    static let numberOfItemsInRow = 5.0
 }
 
-class PhotovaultViewController: UIViewController {
+final class PhotovaultViewController: UIViewController {
     
     //MARK: - IBOutlets
     
@@ -23,7 +24,6 @@ class PhotovaultViewController: UIViewController {
     
     static let identifier = "PhotovaultViewController"
     private var user = User()
-    private var numberOfItemsInRow = 5.0
     
     //MARK: - lifecycle funcs
     
@@ -135,10 +135,6 @@ class PhotovaultViewController: UIViewController {
             photoCollectionView.reloadData()
         }
     }
-    
-    private func addRecognizer() {
-        let recognizer = UIRotationGestureRecognizer(target: self, action: #selector(rotationDetected))
-    }
 }
 
 extension PhotovaultViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -163,8 +159,8 @@ extension PhotovaultViewController: UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let overallInset = (numberOfItemsInRow + 1) * .inset
-        let side = (photoCollectionView.frame.width - overallInset) / numberOfItemsInRow
+        let overallInset = (.numberOfItemsInRow + 1) * .inset
+        let side = (photoCollectionView.frame.width - overallInset) / .numberOfItemsInRow
         return CGSize(width: side, height: side)
     }
     

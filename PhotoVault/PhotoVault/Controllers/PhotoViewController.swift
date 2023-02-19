@@ -27,7 +27,7 @@ protocol PhotoViewControllerDelegate: AnyObject {
     func photoViewControllerClosed()
 }
 
-class PhotoViewController: UIViewController {
+final class PhotoViewController: UIViewController {
     
     //MARK: - IBOutlets
     
@@ -149,11 +149,15 @@ class PhotoViewController: UIViewController {
             fullScreenPhotoImageViewHeightConstraint.constant = view.frame.height
         }
         UIView.animate(withDuration: duration) { [weak self] in
-            self?.view.layoutIfNeeded()
+            guard let self = self else { return }
+
+            self.view.layoutIfNeeded()
         } completion: { [weak self] _ in
-            if self?.fullScreenPhotoImageViewHeightConstraint.constant == self?.view.frame.width {
-                self?.scrollView.isHidden = false
-                self?.fullScreenPhotoImageView.isHidden = true
+            guard let self = self else { return }
+            
+            if self.fullScreenPhotoImageViewHeightConstraint.constant == self.view.frame.width {
+                self.scrollView.isHidden = false
+                self.fullScreenPhotoImageView.isHidden = true
             }
         }
     }
@@ -200,13 +204,13 @@ class PhotoViewController: UIViewController {
         let duration = 0.3
         
         UIView.animate(withDuration: duration) { [weak self] in
-            if let width = self?.photoImageView.frame.width {
-                imageView.frame.origin.x -= width
-            }
+            guard let self = self else { return }
+
+            imageView.frame.origin.x -= self.photoImageView.frame.width
         } completion: { [weak self] _ in
-            if let index = self?.index {
-                self?.photoImageView.image = StorageManager.shared.loadImage(fileName: photos[index].name)
-            }
+            guard let self = self else { return }
+
+            self.photoImageView.image = StorageManager.shared.loadImage(fileName: photos[self.index].name)
             imageView.removeFromSuperview()
         }
     }
@@ -337,8 +341,10 @@ class PhotoViewController: UIViewController {
                 title: AlertActionTilte.photoLibrary.rawValue,
                 style: .default
             ) { [weak self] _ in
+                guard let self = self else { return }
+
                 picker.sourceType = .photoLibrary
-                self?.present(picker, animated: true)
+                self.present(picker, animated: true)
             }
         )
         alert.addAction(
@@ -346,9 +352,11 @@ class PhotoViewController: UIViewController {
                 title: AlertActionTilte.cancel.rawValue,
                 style: .cancel
             ) { [weak self ]_ in
-                if self?.photoImageView.image == nil {
-                    self?.delegate?.photoViewControllerClosed()
-                    self?.navigationController?.popViewController(animated: true)
+                guard let self = self else { return }
+
+                if self.photoImageView.image == nil {
+                    self.delegate?.photoViewControllerClosed()
+                    self.navigationController?.popViewController(animated: true)
                 }
             }
         )

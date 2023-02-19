@@ -7,7 +7,7 @@ private extension String {
     static let usersKey = "users"
 }
 
-class StorageManager {
+final class StorageManager {
     
     static let shared = StorageManager()
     
