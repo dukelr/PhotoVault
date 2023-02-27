@@ -13,7 +13,7 @@ final class SignInViewController: UIViewController {
     
     //MARK: - var/let
     
-    private var existingUsers = User.getUsersArray()
+    private var existingUsers = [User]()
     
     //MARK: - lifecycle funcs
     
@@ -43,15 +43,13 @@ final class SignInViewController: UIViewController {
         if let users = StorageManager.shared.loadExistingUsers() {
             existingUsers = users
         }
-        let borderWidthForTextField = 0.5
-        let roundRadiusForTextField = 4.0
         addSwipeRecognizer()
         signInView.bordered()
         signInView.rounded()
-        usernameTextField.bordered(width: borderWidthForTextField)
-        usernameTextField.rounded(radius: roundRadiusForTextField)
-        passwordTextField.bordered(width: borderWidthForTextField)
-        passwordTextField.rounded(radius: roundRadiusForTextField)
+        usernameTextField.bordered(forTextField: true)
+        usernameTextField.rounded(forTextField: true)
+        passwordTextField.bordered(forTextField: true)
+        passwordTextField.rounded(forTextField: true)
     }
 
     private func checkUser() {
@@ -90,6 +88,12 @@ final class SignInViewController: UIViewController {
     
     private func pushAccountController() {
         guard let controller = storyboard?.instantiateViewController(withIdentifier: AccountViewController.identifier) as? AccountViewController else { return }
+        
+        usernameTextField.text = nil
+        passwordTextField.text = nil
+        usernameWarningLabel.isHidden = true
+        passwordWarningLabel.isHidden = true
+        view.endEditing(true)
         controller.authorized = false
         navigationController?.pushViewController(controller, animated: true)
     }

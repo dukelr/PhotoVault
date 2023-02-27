@@ -42,8 +42,8 @@ final class AccountViewController: UIViewController {
     
     static let identifier = "AccountViewController"
     var authorized = Bool()
-    private var existingUsers = User.getUsersArray()
-
+    private var existingUsers = [User]()
+    
     //MARK: - lifecycle funcs
     
     override func viewDidLoad() {
@@ -73,23 +73,21 @@ final class AccountViewController: UIViewController {
         if let users = StorageManager.shared.loadExistingUsers() {
             existingUsers = users
         }
-        let borderWidthForTextField = 0.5
-        let roundRadiusForTextField = 4.0
         addSwipeRecognizer()
         userdataView.bordered()
         userdataView.rounded()
-        usernameTextField.bordered(width: borderWidthForTextField)
-        usernameTextField.rounded(radius: roundRadiusForTextField)
-        passwordTextField.bordered(width: borderWidthForTextField)
-        passwordTextField.rounded(radius: roundRadiusForTextField)
-        confirmTextField.bordered(width: borderWidthForTextField)
-        confirmTextField.rounded(radius: roundRadiusForTextField)
+        usernameTextField.bordered(forTextField: true)
+        usernameTextField.rounded(forTextField: true)
+        passwordTextField.bordered(forTextField: true)
+        passwordTextField.rounded(forTextField: true)
+        confirmTextField.bordered(forTextField: true)
+        confirmTextField.rounded(forTextField: true)
         
         if authorized {
-            titleLabel.text = .change.uppercased() + .account
+            titleLabel.text = .change.uppercased() + .space + .account
             createButton.setTitle(.change, for: .normal)
         } else {
-            titleLabel.text = .create.uppercased() + .account
+            titleLabel.text = .create.uppercased() + .space + .account
             createButton.setTitle(.create, for: .normal)
         }
     }
@@ -177,8 +175,8 @@ final class AccountViewController: UIViewController {
     
     private func checkCheckmarks() -> Bool {
         if !confirmCheckmarkImageView.isHidden,
-            !passwordCheckmarkImageView.isHidden,
-            !usernameCheckmarkImageView.isHidden {
+           !passwordCheckmarkImageView.isHidden,
+           !usernameCheckmarkImageView.isHidden {
             return true
         }
         return false

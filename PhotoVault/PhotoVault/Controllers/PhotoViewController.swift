@@ -295,7 +295,9 @@ final class PhotoViewController: UIViewController {
                     title: AlertActionTilte.ok.rawValue,
                     style: .default
                 ) { [weak self] _ in
-                    self?.navigationController?.popViewController(animated: true)
+                    guard let self = self else { return }
+                    
+                    self.navigationController?.popViewController(animated: true)
                 }
             )
         } else {
@@ -304,7 +306,9 @@ final class PhotoViewController: UIViewController {
                     title: AlertActionTilte.remove.rawValue,
                     style: .destructive
                 ) { [weak self] _ in
-                    self?.removePhoto()
+                    guard let self = self else { return }
+
+                    self.removePhoto()
                 }
             )
             alert.addAction(
@@ -391,7 +395,9 @@ final class PhotoViewController: UIViewController {
         }
         
         UIView.animate(withDuration: animationDuration) { [weak self] in
-            self?.view.layoutIfNeeded()
+            guard let self = self else { return }
+
+            self.view.layoutIfNeeded()
         }
     }
 }
