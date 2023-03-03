@@ -42,10 +42,6 @@ final class PhotovaultViewController: UIViewController {
         pushAccountConttroller()
     }
     
-    @IBAction func rotationDetected(_ recognizer: UIRotationGestureRecognizer) {
-        
-    }
-    
     //MARK: - flow funcs
     
     private func configureSubviews() {
@@ -53,6 +49,7 @@ final class PhotovaultViewController: UIViewController {
             self.user = user
         }
         userLabel.text = user.name
+        photoCollectionView.backgroundColor = .white
         photoCollectionView.contentInset = UIEdgeInsets(
             top: .zero,
             left: .inset,
@@ -137,6 +134,8 @@ final class PhotovaultViewController: UIViewController {
     }
 }
 
+//MARK: - Extensions UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
+
 extension PhotovaultViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -153,7 +152,7 @@ extension PhotovaultViewController: UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         .inset
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         .inset
     }
@@ -168,6 +167,8 @@ extension PhotovaultViewController: UICollectionViewDataSource, UICollectionView
         pushPhotoControllerToViewPhoto(at: indexPath.item)
     }
 }
+
+//MARK: - Extensions PhotoViewControllerDelegate
 
 extension PhotovaultViewController: PhotoViewControllerDelegate {
     func photoViewControllerClosed() {

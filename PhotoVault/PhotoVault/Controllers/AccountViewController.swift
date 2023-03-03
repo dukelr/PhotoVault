@@ -214,6 +214,12 @@ extension AccountViewController: UITextFieldDelegate {
         }
     }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        usernameWarningLabel.isHidden = true
+        passwordWarningLabel.isHidden = true
+        confirmTextField.isHidden = true
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if let text = textField.text,
            text == .empty {

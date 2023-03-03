@@ -33,8 +33,7 @@ final class SignInViewController: UIViewController {
     }
     
     @IBAction func swipeDetected(_ recognizer: UISwipeGestureRecognizer) {
-        usernameTextField.resignFirstResponder()
-        passwordTextField.resignFirstResponder()
+        view.endEditing(true)
     }
     
     //MARK: - flow funcs
@@ -111,6 +110,11 @@ extension SignInViewController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         string == string.replacingOccurrences(of: " ", with: "")
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        usernameWarningLabel.isHidden = true
+        passwordWarningLabel.isHidden = true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

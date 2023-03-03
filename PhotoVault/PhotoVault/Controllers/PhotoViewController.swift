@@ -53,7 +53,7 @@ final class PhotoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureSubviews()
+        setupSubviews()
     }
     
     deinit {
@@ -98,7 +98,7 @@ final class PhotoViewController: UIViewController {
     
     //MARK: - flow funcs
     
-    private func configureSubviews() {
+    private func setupSubviews() {
         guard let user = StorageManager.shared.loadUser(),
               let users = StorageManager.shared.loadExistingUsers() else { return }
         
@@ -120,6 +120,8 @@ final class PhotoViewController: UIViewController {
                 likeButton.tintColor = .darkGray
             }
         }
+        commentTextField.rounded(forTextField: true)
+        commentTextField.bordered(forTextField: true)
         registerForKeyboardNotifications()
         addGestureRecognizers()
         fullScreenPhotoImageViewHeightConstraint.constant = view.frame.width
@@ -381,19 +383,19 @@ final class PhotoViewController: UIViewController {
             object: nil
         )
     }
-    
+
     private func showKeyboard(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let animationDuration = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue,
               let keyboardScreenEndFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
-        
+
         if notification.name == UIResponder.keyboardWillHideNotification {
             scrollViewBottomConstraint.constant = .zero
         } else {
             let offset = 10.0
             scrollViewBottomConstraint.constant = keyboardScreenEndFrame.height + offset
         }
-        
+
         UIView.animate(withDuration: animationDuration) { [weak self] in
             guard let self = self else { return }
 
