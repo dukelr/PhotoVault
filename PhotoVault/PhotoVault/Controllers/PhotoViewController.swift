@@ -1,18 +1,22 @@
 
 import UIKit
 
+//MARK: - Enums
+
 private enum Direction {
     case previous
     case next
 }
 
-private enum AlertActionTilte: String {
+private enum AlertActionTitle: String {
     case camera = "Camera"
     case photoLibrary = "Photo Library"
     case ok = "OK"
     case remove = "Remove"
     case cancel = "Cancel"
 }
+
+//MARK: - Extensions
 
 private extension UIImage {
     static let isLiked = UIImage(systemName: "heart.fill")
@@ -22,6 +26,12 @@ private extension UIImage {
 private extension UIColor {
     static let likeColor = UIColor(named: "like")
 }
+
+private extension TimeInterval {
+    static let duration = 0.3
+}
+
+//MARK: - Protocols
 
 protocol PhotoViewControllerDelegate: AnyObject {
     func photoViewControllerClosed()
@@ -88,7 +98,7 @@ final class PhotoViewController: UIViewController {
     }
     
     @IBAction func tapDetected(_ recognizer: UITapGestureRecognizer) {
-        makePhotoFullScreen()
+        makePhotoInFullScreen()
     }
     
     @IBAction func keyboardShowed(_ notification: NSNotification) {
@@ -138,9 +148,7 @@ final class PhotoViewController: UIViewController {
         fullScreenPhotoImageView.addGestureRecognizer(fullScreenTap)
     }
     
-    private func makePhotoFullScreen() {
-        let duration = 0.3
-        
+    private func makePhotoInFullScreen() {
         fullScreenPhotoImageView.image = photoImageView.image
         fullScreenPhotoImageView.isHidden = false
         scrollView.isHidden = true
@@ -150,7 +158,7 @@ final class PhotoViewController: UIViewController {
         } else {
             fullScreenPhotoImageViewHeightConstraint.constant = view.frame.height
         }
-        UIView.animate(withDuration: duration) { [weak self] in
+        UIView.animate(withDuration: .duration) { [weak self] in
             guard let self = self else { return }
 
             self.view.layoutIfNeeded()
@@ -178,7 +186,23 @@ final class PhotoViewController: UIViewController {
         guard let photos = user.photos else { return }
         
         let photo = createPhoto()
+        getIndexForPhoto(direction)
         
+        switch direction {
+        case .previous:
+            photo.frame.origin.x = photoImageView.frame.origin.x
+            photo.image = photoImageView.image
+            photoImageView.image = StorageManager.shared.loadImage(fileName: photos[index].name)
+        case .next:
+            photo.image = StorageManager.shared.loadImage(fileName: photos[index].name)
+        }
+        animatePhoto(photo)
+        updatePhoto()
+    }
+    
+    private func getIndexForPhoto(_ direction: Direction) {
+        guard let photos = user.photos else { return }
+
         switch direction {
         case .previous:
             if index > 0 {
@@ -186,26 +210,19 @@ final class PhotoViewController: UIViewController {
             } else {
                 index = photos.count - 1
             }
-            photo.frame.origin.x = photoImageView.frame.origin.x
-            photo.image = photoImageView.image
-            photoImageView.image = StorageManager.shared.loadImage(fileName: photos[index].name)
         case .next:
             if index < photos.count - 1 {
                 index += 1
             } else {
                 index = 0
             }
-            photo.image = StorageManager.shared.loadImage(fileName: photos[index].name)
         }
-        animatePhoto(photo)
-        updatePhoto()
     }
     
     private func animatePhoto(_ imageView: UIImageView) {
         guard let photos = user.photos else { return }
-        let duration = 0.3
         
-        UIView.animate(withDuration: duration) { [weak self] in
+        UIView.animate(withDuration: .duration) { [weak self] in
             guard let self = self else { return }
 
             imageView.frame.origin.x -= self.photoImageView.frame.width
@@ -218,7 +235,8 @@ final class PhotoViewController: UIViewController {
     }
     
     private func likePhoto() {
-        guard let photos = user.photos  else { return }
+        guard let photos = user.photos else { return }
+        
         if likeButton.currentBackgroundImage == .noLiked {
             likeButton.setBackgroundImage(.isLiked, for: .normal)
             likeButton.tintColor = .likeColor
@@ -294,7 +312,7 @@ final class PhotoViewController: UIViewController {
             alert.message = "You don't have photos"
             alert.addAction(
                 UIAlertAction(
-                    title: AlertActionTilte.ok.rawValue,
+                    title: AlertActionTitle.ok.rawValue,
                     style: .default
                 ) { [weak self] _ in
                     guard let self = self else { return }
@@ -305,7 +323,7 @@ final class PhotoViewController: UIViewController {
         } else {
             alert.addAction(
                 UIAlertAction(
-                    title: AlertActionTilte.remove.rawValue,
+                    title: AlertActionTitle.remove.rawValue,
                     style: .destructive
                 ) { [weak self] _ in
                     guard let self = self else { return }
@@ -315,7 +333,7 @@ final class PhotoViewController: UIViewController {
             )
             alert.addAction(
                 UIAlertAction(
-                    title: AlertActionTilte.cancel.rawValue,
+                    title: AlertActionTitle.cancel.rawValue,
                     style: .cancel
                 )
             )
@@ -335,7 +353,7 @@ final class PhotoViewController: UIViewController {
         )
         alert.addAction(
             UIAlertAction(
-                title: AlertActionTilte.camera.rawValue,
+                title: AlertActionTitle.camera.rawValue,
                 style: .default
             ) { _ in
                 //                picker.sourceType = .camera
@@ -344,7 +362,7 @@ final class PhotoViewController: UIViewController {
         )
         alert.addAction(
             UIAlertAction(
-                title: AlertActionTilte.photoLibrary.rawValue,
+                title: AlertActionTitle.photoLibrary.rawValue,
                 style: .default
             ) { [weak self] _ in
                 guard let self = self else { return }
@@ -355,7 +373,7 @@ final class PhotoViewController: UIViewController {
         )
         alert.addAction(
             UIAlertAction(
-                title: AlertActionTilte.cancel.rawValue,
+                title: AlertActionTitle.cancel.rawValue,
                 style: .cancel
             ) { [weak self ]_ in
                 guard let self = self else { return }

@@ -11,15 +11,11 @@ final class SignInViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var passwordWarningLabel: UILabel!
     
-    //MARK: - var/let
-    
-    private var existingUsers = [User]()
-    
     //MARK: - lifecycle funcs
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureSubviews()
+        setupSubviews()
     }
     
     //MARK: - IBActions
@@ -38,10 +34,7 @@ final class SignInViewController: UIViewController {
     
     //MARK: - flow funcs
     
-    private func configureSubviews() {
-        if let users = StorageManager.shared.loadExistingUsers() {
-            existingUsers = users
-        }
+    private func setupSubviews() {
         addSwipeRecognizer()
         signInView.bordered()
         signInView.rounded()
@@ -55,13 +48,14 @@ final class SignInViewController: UIViewController {
         guard let username = usernameTextField.text,
               let password = passwordTextField.text else { return }
         
+        let existingUsers = StorageManager.shared.loadExistingUsers()
         let user = User()
         user.name = username
         user.password = password
-        user.photos = existingUsers.filter { $0.name == user.name && $0.password == user.password }.first?.photos
+        user.photos = existingUsers?.filter { $0.name == user.name && $0.password == user.password }.first?.photos
         
-        if existingUsers.filter({ $0.name == user.name && $0.password == user.password }).count == 0 {
-            if existingUsers.filter({ $0.name == username }).count == 0 {
+        if existingUsers?.filter({ $0.name == user.name && $0.password == user.password }).count == .zero {
+            if existingUsers?.filter({ $0.name == username }).count == .zero {
                 usernameWarningLabel.isHidden = false
                 passwordWarningLabel.isHidden = true
             } else {

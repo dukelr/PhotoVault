@@ -41,7 +41,7 @@ final class AccountViewController: UIViewController {
     //MARK: - var/let
     
     static let identifier = "AccountViewController"
-    var authorized = Bool()
+    var authorized = false
     private var existingUsers = [User]()
     
     //MARK: - lifecycle funcs
@@ -62,9 +62,7 @@ final class AccountViewController: UIViewController {
     }
     
     @IBAction func swipeDetected(_ recognizer: UISwipeGestureRecognizer) {
-        usernameTextField.resignFirstResponder()
-        passwordTextField.resignFirstResponder()
-        confirmTextField.resignFirstResponder()
+        view.endEditing(true)
     }
     
     //MARK: - flow funcs
