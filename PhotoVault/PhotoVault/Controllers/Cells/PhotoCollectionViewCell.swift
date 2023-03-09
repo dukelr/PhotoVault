@@ -8,6 +8,7 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
     static let identifier = "PhotoCollectionViewCell"
     
     func configure(with image: UIImage) {
+        photoImageView.contentMode = .scaleAspectFill
         photoImageView.image = image
     }
 }
